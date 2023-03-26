@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Runs</string>
+    <string name="startButton">start</string>
+    <string name="finishButton">Finish</string>
 </resources>
