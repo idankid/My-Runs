@@ -1,4 +1,4 @@
-package com.Idan_Elisheva.myruns;
+package com.idank_elishevaa.myruns;
 
 import org.junit.Test;
 

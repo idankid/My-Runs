@@ -1,4 +1,4 @@
-package com.Idan_Elisheva.myruns;
+package com.idank_elishevaa.myruns;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.Idan_Elisheva.myruns", appContext.getPackageName());
+        assertEquals("com.idank_elishevaa.myruns", appContext.getPackageName());
     }
 }
