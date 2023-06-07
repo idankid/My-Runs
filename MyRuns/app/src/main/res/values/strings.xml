@@ -2,4 +2,6 @@
     <string name="app_name">My Runs</string>
     <string name="startButton">start</string>
     <string name="finishButton">Finish</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="history">History</string>
 </resources>

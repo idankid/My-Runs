@@ -29,6 +29,7 @@
             android:layout_height="73dp"
             android:text="Dark Mode"
             android:textSize="24sp" />
+
         <Switch
             android:id="@+id/DoNotDisturb"
             android:layout_width="335dp"
