@@ -23,6 +23,7 @@ public class DataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE runs(date TEXT, time TEXT, coordinates TEXT)");
+        db.execSQL("CREATE TABLE settings(name TEXT, active TEXT)");
     }
 
     @Override
@@ -66,6 +67,8 @@ public class DataBase extends SQLiteOpenHelper {
                 // parsing the string to get a list of lat long coordinates
                 List<LatLng> coordinates = parseCoordinates(coordinatesString);
 
+                if(coordinates.isEmpty()) continue;
+
                 // creating a item that holds the history and adding it to the list
                 HistoryItem item = new HistoryItem(date, time, coordinates);
                 runs.add(item);
@@ -79,6 +82,7 @@ public class DataBase extends SQLiteOpenHelper {
         return runs;
     }
 
+    // parsing the coordinates string to a list
     private List<LatLng> parseCoordinates(String str){
         List<LatLng> coordinates = new ArrayList<>();
 
@@ -98,4 +102,100 @@ public class DataBase extends SQLiteOpenHelper {
 
         return coordinates;
     }
+
+    // getting the dark mode setting
+    public Boolean getDarkMode(){
+        String active = "false";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM settings Where name='DarkMode'", null);
+
+        if (cursor.moveToFirst()) {
+            int activeInt = cursor.getColumnIndex("active");
+
+            do {
+                // getting the data for every row
+                active = cursor.getString(activeInt);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return active.equals("true");
+    }
+
+    // setting the dark mode setting
+    public void setDarkMode(Boolean mode){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM settings WHERE name='DarkMode' ", null);
+        if(cursor.moveToFirst()){
+            if(mode)
+                db.execSQL("UPDATE settings SET active='true' WHERE name='DarkMode' ");
+            else
+                db.execSQL("UPDATE settings SET active='false' WHERE name='DarkMode' ");
+        }
+        else{
+            // creating the values
+            ContentValues values = new ContentValues();
+            values.put("name", "DarkMode");
+            values.put("active", mode?"true":"false");
+            db.insert("settings", null, values);
+        }
+
+        cursor.close();
+        db.close();
+
+
+    }
+
+    // getting the do not disturb setting
+    public Boolean getDoNotDisturb(){
+        String active = "false";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM settings Where name='Disturb'", null);
+
+        if (cursor.moveToFirst()) {
+            int activeInt = cursor.getColumnIndex("active");
+
+            do {
+                // getting the data for every row
+                active = cursor.getString(activeInt);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return active.equals("true");
+    }
+
+    // setting the dark mode setting
+    public void setDoNotDisturb(Boolean mode){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM settings WHERE name='Disturb' ", null);
+        if(cursor.moveToFirst()){
+            if(mode)
+                db.execSQL("UPDATE settings SET active='true' WHERE name='Disturb' ");
+            else
+                db.execSQL("UPDATE settings SET active='false' WHERE name='Disturb' ");
+        }
+        else{
+            // creating the values
+            ContentValues values = new ContentValues();
+            values.put("name", "Disturb");
+            values.put("active", mode?"true":"false");
+            db.insert("settings", null, values);
+        }
+
+        cursor.close();
+        db.close();
+
+
+    }
+
+
 }

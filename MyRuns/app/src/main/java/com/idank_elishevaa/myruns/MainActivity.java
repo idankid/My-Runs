@@ -1,6 +1,7 @@
 package com.idank_elishevaa.myruns;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
@@ -24,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setup();
+        setupButtons();
 
     }
 
     // setting up the buttons
-    private void setup(){
+    private void setupButtons(){
         // setting up the start button
         Button start = (Button) findViewById(R.id.start);
         Intent goToRun  = new Intent(this, MapActivity.class);
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
     // creating the menu
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,8 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Log.d("debug", "Yes");
-                finish(); // destroy this activity
+                finishAffinity();
             }
         });
 

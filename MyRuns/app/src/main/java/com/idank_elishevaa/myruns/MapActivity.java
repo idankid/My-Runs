@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
@@ -53,14 +54,13 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
         map = new Map(this, mapFragment);
         map.location();
 
+        waitToLoad();
         //setting up the finish button
         setUpFinish();
 
         display = findViewById(R.id.stopwatch);
-        stopwatch = new runningTimer(display, this);
-        stopwatch.start();
+        stopwatch = new runningTimer(this, display, this);
 
-        running = true;
 
     }
 
@@ -68,11 +68,12 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
     private void setUpFinish(){
         Button finish = findViewById(R.id.finish);
 
-        Intent goToMain  = new Intent(this, MainActivity.class);
+
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(running){
+                    running = false;
 
                     // adding the run to the database
                     String runTime = stopwatch.stop();
@@ -81,8 +82,6 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
                     db.insertRun(runDate, runTime, coordinates);
 
                 }
-//                startActivity(goToMain);
-
 
             }
         });
@@ -157,5 +156,18 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
     protected void onDestroy() {
         super.onDestroy();
         stopwatch.stop();
+    }
+
+    // giving enough time for the location to load
+    private void waitToLoad(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                stopwatch.start();
+
+                running = true;
+            }
+        }, 3000); // Delay in milliseconds (e.g., 2000 = 2 seconds)
     }
 }

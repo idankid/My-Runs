@@ -97,7 +97,6 @@ public class itemAdaptor extends RecyclerView.Adapter<ItemHolder> {
                         include(northeast).build();
 
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-                mapView.onResume();
             }
         });
 
@@ -108,33 +107,34 @@ public class itemAdaptor extends RecyclerView.Adapter<ItemHolder> {
 
     // returns a southwest coordinate
     private LatLng getSouthWest(List<LatLng> coordinates){
-        double maxLat = -200;
-        double minLng = 200;
-
-        for(LatLng coordinate : coordinates){
-            if(coordinate.latitude>maxLat)
-                maxLat = coordinate.latitude;
-            if(coordinate.longitude > minLng)
-                minLng = coordinate.longitude;
-
-        }
-
-        return new LatLng(maxLat, minLng);
-    }
-
-    // returns a northeast coordinate
-    private LatLng getNorthEast(List<LatLng> coordinates){
         double minLat = 200;
-        double maxLng = -200;
+        double minLng = 200;
 
         for(LatLng coordinate : coordinates){
             if(coordinate.latitude < minLat)
                 minLat = coordinate.latitude;
+
+            if(coordinate.longitude < minLng)
+                minLng = coordinate.longitude;
+
+        }
+
+        return new LatLng(minLat, minLng);
+    }
+
+    // returns a northeast coordinate
+    private LatLng getNorthEast(List<LatLng> coordinates){
+        double maxLat = -200;
+        double maxLng = -200;
+
+        for(LatLng coordinate : coordinates){
+            if(coordinate.latitude > maxLat)
+                maxLat = coordinate.latitude;
             if(coordinate.longitude > maxLng)
                 maxLng = coordinate.longitude;
         }
 
-        return new LatLng(minLat, maxLng);
+        return new LatLng(maxLat, maxLng);
     }
 
 }
