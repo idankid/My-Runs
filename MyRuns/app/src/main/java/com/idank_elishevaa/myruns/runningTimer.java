@@ -35,9 +35,12 @@ public class runningTimer {
     }
 
     // Starting the stopwatch
-    public void start() {
+    public void start(long start) {
         if (!isRunning) {
-            stopwatch.setBase(SystemClock.elapsedRealtime());
+            if(start == -1)
+                stopwatch.setBase(SystemClock.elapsedRealtime());
+            else
+                stopwatch.setBase(start);
             stopwatch.start();
             isRunning = true;
 
@@ -49,7 +52,6 @@ public class runningTimer {
                     timeElapsed = SystemClock.elapsedRealtime() - stopwatch.getBase();
                     String time = makeText();
                     // Show the stopwatch in status bar
-                    showNotification(makeText());
                     if (timerCallback != null) {
                         timerCallback.onTimerUpdate(time);
                     }
@@ -69,8 +71,6 @@ public class runningTimer {
                 timer.cancel();
                 timer = null;
             }
-
-            hideNotification();
 
             return makeText();
         }
@@ -96,27 +96,8 @@ public class runningTimer {
         return time;
     }
 
-    private void showNotification(String time) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Creating a notification channel
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Running Timer", NotificationManager.IMPORTANCE_DEFAULT);
-        notificationManager.createNotificationChannel(channel);
-
-
-        // Building the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_logo)
-                .setContentTitle("Running Timer")
-                .setContentText(time)
-                .setOngoing(true);
-
-        // Show the notification
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    public long getStartTime(){
+        return stopwatch.getBase();
     }
 
-    private void hideNotification() {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
 }

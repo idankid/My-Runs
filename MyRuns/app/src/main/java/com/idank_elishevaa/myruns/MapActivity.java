@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -28,6 +29,8 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
     private Chronometer display;
     private Boolean running;
     private Map map;
+
+    private Intent timerIntend;
 
     private final DataBase db = new DataBase(this);
 
@@ -74,6 +77,11 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
             public void onClick(View view) {
                 if(running){
                     running = false;
+                    try{
+                        stopService(timerIntend);
+                    }catch(Exception e){
+                        Log.d("timer receiver", "no receiver active");
+                    }
 
                     // adding the run to the database
                     String runTime = stopwatch.stop();
@@ -166,10 +174,30 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
             @Override
             public void run() {
 
-                stopwatch.start();
+                stopwatch.start(-1);
 
                 running = true;
             }
         }, 3000); // Delay in milliseconds (e.g., 2000 = 2 seconds)
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(running){
+            timerIntend = new Intent(this, runningTimerService.class);
+            timerIntend.putExtra("start_time", stopwatch.getStartTime());
+            startService(timerIntend);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try{
+            stopService(timerIntend);
+        }catch(Exception e){
+            Log.d("service", "cannot stop service");
+        }
     }
 }

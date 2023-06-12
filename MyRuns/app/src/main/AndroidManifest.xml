@@ -19,7 +19,6 @@
 
     <!-- permissions for ignoring calls   -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
@@ -69,6 +68,7 @@
         <receiver android:name=".IgnoreReceiver"
             android:exported="false">
         </receiver>
+        <service android:name=".runningTimerService" />
     </application>
 
 
