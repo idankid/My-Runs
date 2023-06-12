@@ -79,7 +79,9 @@ public class MapActivity extends AppCompatActivity implements runningTimer.Timer
                     String runTime = stopwatch.stop();
                     String runDate = getDate();
                     List<LatLng> coordinates =  map.finish();
-                    db.insertRun(runDate, runTime, coordinates);
+
+                    if(!coordinates.isEmpty())
+                        db.insertRun(runDate, runTime, coordinates);
 
                 }
 

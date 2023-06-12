@@ -17,9 +17,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-<!--    <uses-permission android:name="android.permission.CALL_PHONE" />-->
-<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+    <!-- permissions for ignoring calls   -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
 
     <application
@@ -64,18 +66,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDZgwq6B6t0G3CTE3wWovORcfVRImc9GdA" />
 
-<!--        <receiver android:name=".IgnoreReceiver"-->
-<!--            android:exported="false"-->
-<!--            android:permission="android.permission.BROADCAST_SMS">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.PHONE_STATE" />-->
-<!--                <action android:name="android.provider.Telephony.SMS_RECEIVED" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <receiver android:name=".IgnoreReceiver"
+            android:exported="false">
+        </receiver>
     </application>
-
-
-
 
 
 </manifest>

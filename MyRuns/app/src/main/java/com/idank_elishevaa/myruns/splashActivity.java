@@ -3,11 +3,17 @@ package com.idank_elishevaa.myruns;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.TelephonyManager;
 
 public class SplashActivity extends AppCompatActivity {
+
+    public static IgnoreReceiver ign = new IgnoreReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,13 @@ public class SplashActivity extends AppCompatActivity {
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+        if(db.getDoNotDisturb()){
+            ign = new IgnoreReceiver();
+            IntentFilter  filter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+            filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+            registerReceiver(ign, filter);
+        }
+
     }
 
     // giving enough time to see the splash screen
@@ -45,8 +58,9 @@ public class SplashActivity extends AppCompatActivity {
         }, 2000); // Delay in milliseconds (e.g., 2000 = 2 seconds)
     }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(ign);
+    }
 }
