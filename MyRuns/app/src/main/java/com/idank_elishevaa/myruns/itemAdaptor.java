@@ -75,6 +75,7 @@ public class itemAdaptor extends RecyclerView.Adapter<ItemHolder> {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                googleMap.setMaxZoomPreference(17.0f);
                 mapView.onResume();
                 // initializing the line parameters
                 PolylineOptions line = new PolylineOptions();

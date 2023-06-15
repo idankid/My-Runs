@@ -120,6 +120,7 @@ public class Map implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
+        this.googleMap.setMaxZoomPreference(17.0f);
     }
 
     // updating the min and max values to find the bounds

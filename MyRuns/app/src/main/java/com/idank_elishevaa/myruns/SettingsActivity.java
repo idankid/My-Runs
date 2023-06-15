@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     //setting up a the dark mode switch
     private void setUpDarkMode(){
         darkMode = findViewById(R.id.DarkMode);
-        darkMode.setChecked(db.getDarkMode());
+        darkMode.setChecked(db.getDarkMode()?db.getDarkMode():false);
         darkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -82,7 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
             return;
         }
 
-        DoNotDisturb.setChecked(db.getDoNotDisturb());
+        DoNotDisturb.setChecked(db.getDoNotDisturb()?db.getDoNotDisturb():false);
 
         DoNotDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -61,6 +62,11 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(ign);
+        try{
+            unregisterReceiver(ign);
+        }
+        catch (Exception e){
+            Log.d("receiver", "not registered ");
+        }
     }
 }
