@@ -16,6 +16,8 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -43,6 +45,7 @@ public class Map implements OnMapReadyCallback {
     private final Context context;
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
+    private Handler mapHandler; // Handler for running map operations on a separate thread
 
     public GoogleMap googleMap;
     private final float zoom = 17.0f;
@@ -56,6 +59,7 @@ public class Map implements OnMapReadyCallback {
 
     // constructor
     public Map(Context con, SupportMapFragment mapFragment){
+        mapHandler = new Handler(Looper.getMainLooper()); // Initialize the mapHandler with the main thread's Looper
         mapFragment.getMapAsync(this);
 
         this.context = con;
@@ -82,28 +86,8 @@ public class Map implements OnMapReadyCallback {
 
             // Called when a new location is found by the location provider.
             public void onLocationChanged(Location location) {
-
-                // getting the latitude and longitude
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                LatLng coordinate = new LatLng(latitude, longitude);
-
-                updateCoordinates(latitude, longitude);
-
-                //showing the starting point
-                if(coordinates.isEmpty() && googleMap != null){
-                    googleMap.addMarker(new MarkerOptions().position(coordinate).title("Start"));
-                }
-
-                coordinates.add(coordinate);
-                line.add(coordinate);
-
-                // centering the map to the location
-                if(googleMap != null){
-                    googleMap.addPolyline(line);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, zoom));
-                }
-
+                // Run map-related operations on the main thread using the mapHandler
+                mapHandler.post(() -> handleLocationChanged(location));
             }
         };
 
@@ -115,6 +99,30 @@ public class Map implements OnMapReadyCallback {
                 MIN_TIME_FOR_UPDATE,
                 MIN_DIS_FOR_UPDATE,
                 locationListener);
+    }
+
+    // Handle location change on the main thread
+    private void handleLocationChanged(Location location) {
+        // getting the latitude and longitude
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        LatLng coordinate = new LatLng(latitude, longitude);
+
+        updateCoordinates(latitude, longitude);
+
+        //showing the starting point
+        if(coordinates.isEmpty() && googleMap != null){
+            googleMap.addMarker(new MarkerOptions().position(coordinate).title("Start"));
+        }
+
+        coordinates.add(coordinate);
+        line.add(coordinate);
+
+        // centering the map to the location
+        if(googleMap != null){
+            googleMap.addPolyline(line);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, zoom));
+        }
     }
 
     @Override
@@ -137,7 +145,6 @@ public class Map implements OnMapReadyCallback {
         if(longitude < minLong)
             minLong = longitude;
     }
-
 
     public List<LatLng> finish(){
         //stop listening to the location
@@ -184,7 +191,6 @@ public class Map implements OnMapReadyCallback {
             });
 
             builder.show();
-
         }
 
         return coordinates;
@@ -240,5 +246,4 @@ public class Map implements OnMapReadyCallback {
         mediaScanIntent.setData(imageUri);
         context.sendBroadcast(mediaScanIntent);
     }
-
 }
